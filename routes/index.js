@@ -6,7 +6,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	logger.info('Welcome visit index...');
-   	res.render('index', { title: 'Hello Hellow' ,layout: 'layout'});
+   	res.render('index', { title: 'Hello Hellow' ,pluginCss:[],pluginScript:[],layout: 'layout'});
 });
 router.get('/hellow',function(req,res,next){
 	logger.info('Welcome visit hellow...layout12');
