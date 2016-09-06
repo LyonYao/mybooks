@@ -15,7 +15,6 @@ var options = {
 
 var mysql = require('mysql');
 var pool = mysql.createPool(options);
-console.log('==========================================================');
 /**
  * 释放数据库连接
  */
