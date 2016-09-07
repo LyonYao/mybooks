@@ -5,8 +5,6 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	var error=req.flash('errorMessage');
-	 console.log('ERRRR:::'+error);
    	res.render('index', { title: 'Hello Hellow' ,pluginCss:[],
    		pluginScript:[],
    		path:'/summary',

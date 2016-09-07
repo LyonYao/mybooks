@@ -15,7 +15,6 @@ router.post('/login', function(req, res) {
 		console.log(results);
 	}});
 	req.flash('errorMessage', 'Flash is back!');
-	req.session.ixxx=1233;
 	res.redirect('/login');
 });
 module.exports = router;
