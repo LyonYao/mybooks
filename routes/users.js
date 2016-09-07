@@ -9,12 +9,13 @@ router.get('/users', function(req, res, next) {
 	}});
 	res.send('respond with a resource');
 });
-router.post('/login', function(req, res, next) {
+router.post('/login', function(req, res) {
 	var db = require('../db');
 	db.execQuery({sql:'select * from menus where parent_id=?',args:[-1],handler:function(results){
 		console.log(results);
 	}});
-	console.log('LOGIN');
-	res.send('respond with a resource');
+	req.flash('errorMessage', 'Flash is back!');
+	req.session.ixxx=1233;
+	res.redirect('/login');
 });
 module.exports = router;

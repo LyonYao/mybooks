@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
+var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var menus = require('./routes/menus');
@@ -21,20 +22,22 @@ app.use(partials());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('keyboard cat'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('trust proxy', 1) // trust first proxy 
+app.set('trust proxy', 1); // trust first proxy 
+
 app.use(session({
+  key: 'sid',
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true,maxAge: 60000}
-}))
+  saveUninitialized: true, 
+  cookie: {maxAge: 60000,path: '/', httpOnly: true}
+}));
+app.use(flash());
 var notNeedLogin={'/login':true,'/users/login':true};
 app.use(function(req,res,next){
 	 var pathName = url.parse(req.url).pathname;
-	 console.log(pathName);
-	 if(notNeedLogin[[pathName]]){
+	 if(pathName.indexOf('.')>0||notNeedLogin[[pathName]]){
 		 next();
 		 return;
 	 }
@@ -42,6 +45,7 @@ app.use(function(req,res,next){
 	 if(loginUser&&loginUser.isLogin){
 		 res.locals.user=loginUser;
 		 next();
+		 return;
 	 }else{
 		 res.redirect('/login');
 	 }
