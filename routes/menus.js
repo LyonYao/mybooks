@@ -7,7 +7,7 @@ var db = require('../db');
 var router = express.Router();
 router.get('/', function(req, res, next) {
 	logger.info('Welcome visit menu...');
-	db.execQuery({sql:'select * from menus',handler:function(results){
+	db.execQuery({sql:'select * from menus order by order_by asc',handler:function(results){
 		var menus={};
 		var menusArray=[];
 		results.forEach(function(item){
@@ -16,11 +16,13 @@ router.get('/', function(req, res, next) {
 					menuHref:item['menu_href'],isLeaf:item['is_leaf'],path:item['path'],
 					children:[]
 			};
+			if(-1==item['parent_id']){
+				menusArray.push(menus[item['id']]);
+			}
 		});
 		for(var k in menus){
 			var it=menus[k];
 			if(-1==it['parentId']){
-				menusArray.push(it);
 				continue;
 			}else{
 				menus[it['parentId']].children.push(it);

@@ -102,17 +102,27 @@ pluginCss.forEach(function(css){ %>
 
 				<ul class="nav nav-list">
 					<% if(typeof(menus)!='undefined'){%>
-					<%menus.forEach(function(menu){ %>
-					<li><a href="#" class="dropdown-toggle"> <i
+					<%menus.forEach(function(menu){ %> <% if(menu.children.length>0){
+					%>
+					<li
+						class="<% var reg=new
+						RegExp('^'+menu.path);if(reg.test(path)){%>active
+						open<%}%>"><a
+						href="#" class="dropdown-toggle"> <i
 							class="<%- menu.menuIcon %>"></i> <span class="menu-text">
 								<%- menu.menuName %> </span> <b class="arrow icon-angle-down"></b>
 					</a>
 						<ul class="submenu">
 							<% menu.children.forEach(function(it){ %>
-							<li><a href="<%- it.menuHref %>"> <i
+							<li class="<% if(path==it.path){%>active<%} %>"><a
+								href="<%- it.menuHref %>"> <i
 									class="icon-double-angle-right"></i> <%- it.menuName %>
 							</a></li> <% })%>
-						</ul></li> <% }) %> <%}%>
+						</ul></li> <%}else{%>
+					<li class="<% if(path==menu.path){%>active<%}%>"><a
+						href="<%- menu.menuHref %>"> <i class="<%- menu.menuIcon %>"></i>
+							<span class="menu-text"> <%- menu.menuName %> </span>
+					</a></li> <% } %> <% })} %>
 				</ul>
 				<!-- /.nav-list -->
 

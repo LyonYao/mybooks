@@ -3,11 +3,13 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var menus = require('./routes/menus');
+var url = require('url');
 var app = express();
 
 // view engine setup
@@ -21,7 +23,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.set('trust proxy', 1) // trust first proxy 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true,maxAge: 60000}
+}))
+var notNeedLogin={'/login':true,'/users/login':true};
+app.use(function(req,res,next){
+	 var pathName = url.parse(req.url).pathname;
+	 console.log(pathName);
+	 if(notNeedLogin[[pathName]]){
+		 next();
+		 return;
+	 }
+	 var loginUser=req.session.loginUser;
+	 if(loginUser&&loginUser.isLogin){
+		 res.locals.user=loginUser;
+		 next();
+	 }else{
+		 res.redirect('/login');
+	 }
+});
 app.use('/',menus);
 app.use('/', routes);
 app.use('/users', users);
