@@ -11,12 +11,11 @@ router.get('/users', function(req, res, next) {
 	res.send('respond with a resource');
 });
 router.post('/login', function(req, res) {
-	
-	db.execQuery({sql:'select * from users where user_name=?',args:[req.param('username')],handler:function(results){
+	console.log(req.params)
+	db.execQuery({sql:'select * from users where user_name=?',args:[req.body.username],handler:function(results){
 		if(results&&results.length>0){
 			var existsUser=results[0];
-			console.log(crypto.createHmac('md5','mybooks').update(req.param('password')).digest('hex'));
-			if(existsUser.password==crypto.createHmac('md5','mybooks').update(req.param('password')).digest('hex')){
+			if(existsUser.password==crypto.createHmac('md5','mybooks').update(req.body.password).digest('hex')){
 				var loginUser={id:existsUser.id,userName:existsUser.user_name,nickName:existsUser.nick_name,isLogin:true};
 				req.session.loginUser=loginUser;
 				res.redirect('/');
@@ -30,5 +29,11 @@ router.post('/login', function(req, res) {
 		}
 	}});
 	
+});
+router.get('/logout', function(req, res) {
+	var loginUser=req.session.loginUser;
+	loginUser.isLogin=false;
+	req.session.loginUser=undefined;
+	res.redirect('/login');
 });
 module.exports = router;
