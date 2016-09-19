@@ -36,7 +36,7 @@ db.execQuery({
 
 	}
 });
-router.get('/', function(req, res, next) {
+router.get('/*', function(req, res, next) {
 	logger.info('Welcome visit menu...');
 	res.locals.menus = menusArray;
 	next();

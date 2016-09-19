@@ -5,6 +5,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	res.redirect('/summary');
+});
+router.get('/summary', function(req, res, next) {
    	res.render('index', { title: 'Hello Hellow' ,pluginCss:[],
    		pluginScript:[],
    		path:'/summary',

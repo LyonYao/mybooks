@@ -16,7 +16,7 @@ router.post('/login', function(req, res) {
 		if(results&&results.length>0){
 			var existsUser=results[0];
 			if(existsUser.password==crypto.createHmac('md5','mybooks').update(req.body.password).digest('hex')){
-				var loginUser={id:existsUser.id,userName:existsUser.user_name,nickName:existsUser.nick_name,isLogin:true};
+				var loginUser={id:existsUser.id,userName:existsUser.user_name,nickName:existsUser.nick_name,isLogin:true,headerImg:existsUser.header_img?existsUser.header_img:'/ace/assets/avatars/avatar.png'};
 				req.session.loginUser=loginUser;
 				res.redirect('/');
 			}else{
