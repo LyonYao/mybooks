@@ -8,7 +8,12 @@ var router = express.Router();
 var menusArray = [];
 db.execQuery({
 	sql : 'select * from menus order by order_by asc',
-	handler : function(results) {
+	handler : function(result) {
+		if(result.error){
+			logger.error('Load menu error!');
+			return;
+		}
+		var results=result.results;
 		var menus = {};
 		results.forEach(function(item) {
 			menus[item['id']] = {

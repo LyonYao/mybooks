@@ -3,7 +3,9 @@
 /**
  * Module dependencies.
  */
-
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ', err);
+});
 var app = require('../app');
 var debug = require('debug')('mybooks:server');
 var http = require('http');

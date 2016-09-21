@@ -28,10 +28,15 @@ exports.release = function(connection) {
  * 执行查询
  */
 exports.execQuery = function(options) {
+	// 查询参数
+	var sql = options['sql'];
+	var args = options['args'];
+	var handler = options['handler'];
 	pool.getConnection(function(error, connection) {
 		if (error) {
 			console.log('DB-获取数据库连接异常！');
-			throw error;
+			handler({error:error});
+			return;
 		}
 
 		/*
@@ -40,21 +45,19 @@ exports.execQuery = function(options) {
 		 * error; } });
 		 */
 
-		// 查询参数
-		var sql = options['sql'];
-		var args = options['args'];
-		var handler = options['handler'];
+		
 
 		// 执行查询
 		if (!args) {
 			var query = connection.query(sql, function(error, results) {
 				if (error) {
 					console.log('DB-执行查询语句异常！');
-					throw error;
+					handler({error:error});
+					return;
 				}
 
 				// 处理结果
-				handler(results);
+				handler({results:results});
 			});
 
 			console.log(query.sql);
@@ -62,11 +65,12 @@ exports.execQuery = function(options) {
 			var query = connection.query(sql, args, function(error, results) {
 				if (error) {
 					console.log('DB-执行查询语句异常！');
-					throw error;
+					handler({error:error});
+					return;
 				}
 
 				// 处理结果
-				handler(results);
+				handler({results:results});
 			});
 
 			console.log(query.sql);
@@ -76,7 +80,7 @@ exports.execQuery = function(options) {
 		connection.release(function(error) {
 			if (error) {
 				console.log('DB-关闭数据库连接异常！');
-				throw error;
+				//throw error;
 			}
 		});
 	});
